@@ -129,9 +129,9 @@ void test_time_violence_recurse()
 
 int main(){
     //递归方式求解最大子数组测试
-    //test_find_maximum_subarray();
+    test_find_maximum_subarray();
     //4-1-2:暴力方式求解最大子数组测试
     //test_find_maximum_subarray_violence();
     //4-1-3:暴力方式和递归方式求解最大子数组分别所需的时间
-    test_time_violence_recurse();
+    //test_time_violence_recurse();
 }

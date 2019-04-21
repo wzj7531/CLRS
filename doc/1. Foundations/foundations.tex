@@ -1,0 +1,274 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{geometry}
+\geometry{left=2cm,top=2cm,right=2cm}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\usepackage{clrscode3e}
+\usepackage{ctex}
+\usepackage{amsmath}
+\title{算法基础}
+
+\begin{document}
+
+\section*{第 2 章\  算法基础}
+
+\section*{2.1 插入排序}
+	\begin{codebox}
+		\Procname{$\proc{Insertion-Sort}(A)$}
+		\li\For $j \gets 2$ \To $\attrib{A}{length}$
+		\li	\Do
+				$\id{key} \gets A[j]$
+		\li		\Comment Insert $A[j]$ into the sorted sequence
+					$A[1 \twodots j-1]$.
+		\li		$i \gets j-1$
+		\li		\While $i > 0$ and $A[i] > \id{key}$
+		\li			\Do
+						$A[i+1] \gets A[i]$
+		\li				$i \gets i-1$					
+					\End
+		\li		$A[i+1]  \gets \id{key}$
+			\End
+	\end{codebox}
+
+$T(n) = \Theta(n^2)$
+
+\paragraph*{Ex2.1-2}
+重写过程$\proc{Insertion-Sort}$,使之按非升序排序.
+	\begin{codebox}
+		\Procname{$\proc{Insertion-Sort}(A)$}
+		\li\For $j \gets 2$ \To $\attrib{A}{length}$
+		\li	\Do
+		$\id{key} \gets A[j]$
+		$A[1 \twodots j-1]$.
+		\li		$i \gets j-1$
+		\li		\While $i > 0$ and $A[i] < \id{key}$
+		\li			\Do
+		$A[i+1] \gets A[i]$
+		\li				$i \gets i-1$					
+		\End
+		\li		$A[i+1]  \gets \id{key}$
+		\End
+	\end{codebox}
+
+\paragraph*{Ex2.1-3}
+线性查找问题.
+	\begin{codebox}
+		\Procname{$\proc{Linear-Find}(A,v)$}
+		\li\For $j \gets 1$ \To $\attrib{A}{length}$
+		\li	\Do
+		\If	$A[j] \isequal v$
+		\li		\Then \Return j	
+				\End	
+		\End
+		\li	\Return \const{nil}
+	\end{codebox}
+
+\paragraph*{Ex2.1-4}
+二进制数加法
+	\begin{codebox}
+		\Procname{$\proc{Binnary-Number-Addition}(A,B,n)$}
+		\li	Let $C[1 \twodots n+1]$ be a new array.
+		\li	$r \gets 0$
+		\li\For	$i \gets n$ \Downto 1
+		\li	\Do
+		$C[i] \gets (A[i] + B[i] + r) \% 2$
+		\li	$r \gets (A[i] + B[i] + r) / 2$
+		\End
+		\li$C[1] \gets r$
+		\li \Return \const{C}
+	\end{codebox}
+
+\section*{2.2 分析算法}
+\paragraph*{Ex2.2-2:选择排序}
+首先找到A中最小元素并与A[1]进行交换,然后找出次最小元素并与A[2]进行交换...
+\begin{codebox}
+	\Procname{$\proc{Selection-Sort}(A)$}
+	\zi\For 
+	$i \gets 1$ \To $\attrib{A}{length}-1$
+	\zi\Do
+	$\id{min} \gets i$
+	\zi\For 
+	\Do 
+	$j \gets i+1$ \To $\attrib{A}{length}$
+	\zi \If $A[j] < A[\id{min}] $
+	\zi \Then $min = j$
+		\End
+	\End
+	\zi Exchange $A[min]$ and $A[i]$
+	\End
+\end{codebox}
+
+\section*{2.3 设计算法}
+\begin{codebox}
+	\Procname{$\proc{Merge}(A, p, q, r)$}
+	\li $n_1 \gets q - p + 1$
+	\li $n_2 \gets r - q$
+	\li let $L[1 \twodots n_1 + 1]$ and $R[1 \twodots n_2 + 1]$ be bew arrays
+	\li \For $i \gets 1$ \To $n_1$
+	\li \Do 
+		$L[i] \gets A[p + i - 1]$
+		\End
+	\li \For $j \gets 1$ \To $n_2$
+	\li \Do
+		$R[j] \gets A[q + j]$
+		\End
+	\li $L[n_1 + 1] \gets \infty$
+	\li $R[n_2 + 1] \gets \infty$
+	\li $i \gets 1$
+	\li $j \gets 1$
+	\li \For $k \gets p$ \To $r$
+			\Do
+	\li			\If $L[i] \leq R[j]$
+	\li				\Then 
+						$A[k] \gets L[i]$
+	\li					$i \gets i + 1$					
+	\li				\Else
+	\li 				$A[k] \gets R[j]$
+	\li				  	$j \gets j + 1$
+					\End
+			\End
+	
+\end{codebox}
+
+\begin{codebox}
+	\Procname{$\proc{Merge-Sort}(A, p, r)$}
+	\li \If $p < r$
+	\li \Then
+	$q \gets \floor{(p + r) / 2}$
+	\li $\proc{Merge-Sort}(A, p, q)$
+	\li $\proc{Merge-Sort}(A, q+1, r)$
+	\li $\proc{Merge}(A, p, q, r)$
+	\End
+\end{codebox}
+\noindent 利用递归树,可以得知$\proc{Merge-Sort}$的算法复杂度为$\Theta{(nlgn)}$
+
+\paragraph*{Ex2.3-2}
+重写过程$\proc{Merge-Sort}$,使之不使用哨兵,而是一旦数组L或R的所有元素均被复制回A就立刻停止,然后把另一个数组的剩余部分复制回A.
+\begin{codebox}
+	\Procname{$\proc{Merge-Sort-Without-Guard}(A, p, q, r)$}
+	\li $n_1 \gets q -p + 1$
+	\li $n_2 \gets r - q$
+	\li Let $L[1 \twodots n_1]$ and $R[1 \twodots n_2]$ be new arrays.
+	\li \For $i \gets 1$ \To $n_1$
+	\li		\Do
+				$L[i] \gets A[p + i - 1]$
+			\End
+	\li	\For $j \gets 1$ \To $n_2$
+	\li 	\Do
+				$R[j] \gets A[q + j]$
+			\End
+	\li $i \gets 1$
+	\li	$j \gets 1$
+	\li $k \gets p$
+	\li \While $i \leq n_1$ and $j \leq n_2$
+	\li		\Do
+				\If $L[i] \leq R[j]$
+	\li			\Then 
+					$A[k] \gets L[i]$
+	\li 			$i \gets i + 1$
+	\li			\Else
+	\li				$A[k] \gets R[j]$
+	\li				$j \gets j + 1$
+				\End
+	\li			$k \gets k + 1$
+			\End
+	\li	\While $i \leq n_1$
+	\li \Do
+			$A[k] \gets L[i]$
+	\li		$i \gets i + 1$
+		\End
+	\li \While $j \leq n_2$
+	\li \Do
+			$A[k] \gets R[j]$
+	\li		$j \gets j + 1$
+		\End
+\end{codebox}
+\paragraph*{Ex2.3-4}
+我们可以把插入排序表示为如下的一个递归过程。为了排序$A[1 \twodots n]$,我们递归地排序$A[1 \twodots n-1]$,然后把$A[n]$插入已排序的数组$A[i \twodots n-1]$。为插入排序的这个版本的最坏情况运行时间写一个递归式。
+\begin{codebox}
+	\Procname{$\proc{Insertion}(A,p)$}
+	\li $\id{key} \gets A[p]$
+	\li $i \gets p-1$
+	\li \While $i > 0$ and $A[i] < \id{key}$
+	\li 	\Do
+				$A[i + 1] = A[i]$
+	\li			$i \gets i - 1$
+			\End
+	\li	$A[i + 1] \gets \id{key}$
+\end{codebox}
+\begin{codebox}
+	\Procname{$\proc{Insertion-Sort-Recursive}(A, p)$}
+	\li \If $p > 1$
+	\li	\Then
+			$\proc{Insertion-Sort-Recursive}(A, p-1)$
+	\li		$\proc{Insertion}(A, p)$		
+		\End
+\end{codebox}
+\noindent 其递归式如下：
+\[
+	T(n) = 
+	\begin{cases}
+		         \Theta(1) & \text{if $n = 1$}\\
+		T(n-1) + \Theta(n) & \text{if $n = 2$}
+	\end{cases}
+\]
+\paragraph*{Ex2.3-5}
+假设A已排好序，为二分查找写出迭代式或递归的伪代码。证明二分查找的最坏情况运行时间为$\Theta(lgn)$
+\begin{codebox}
+	\Procname{$\proc{Binary-Search-Recursive}(A, key, low, high)$}
+	\li \If $low \leq high$
+	\li 	\Then
+			$mid = \floor{(low + high) / 2}$
+	\li		\If $\id{key} < A[mid]$
+	\li			\Then \Return $\proc{Binary-Search-Recursive}(A, key, low, mid - 1)$	
+	\li		\ElseIf $\id{key} > A[mid]$
+	\li			\Then \Return $\proc{Binary-Search-Recursive}(A, key, mid + 1, high)$
+	\li		\ElseNoIf
+	\li			\Return $mid$
+			\End
+	\li	\Else
+   	\li 	\Return \const{NIL}		
+		\End	
+\end{codebox}
+\noindent 该算法的递归式为$T(n) \gets T(n/2) + \Theta(1)$，由递归树可知，其算法复杂度为：$\Theta(lg(n))$
+\paragraph*{Ex2.3-6}
+注意到过程$\proc{Insertion-Sort}$的第5-7行的while循环采用一种线性查找来(反向)扫描已排好序的子数组$A[1 \twodots j-1]$。我们可以使用二分查找来把插入排序的最坏情况总运行时间改进到$\Theta(nlgn)$吗？
+
+\paragraph{}先将上面的$\proc{Binary-Search-Recursive}$算法修改为如下形式:
+\begin{codebox}
+	\Procname{$\proc{Binary-Search-Recursive}(A, key, low, high)$}
+	\li \If $low \leq high$
+	\li 	\Then
+			$mid = \floor{(low + high) / 2}$
+	\li		\If $\id{key} < A[mid]$
+	\li			\Then \Return $\proc{Binary-Search-Recursive}(A, key, low, mid - 1)$	
+	\li		\ElseIf $\id{key} > A[mid]$
+	\li			\Then \Return $\proc{Binary-Search-Recursive}(A, key, mid + 1, high)$
+	\li		\ElseNoIf
+	\li			\Return $mid$
+			\End
+	\li	\Else
+	\li 	\Return $\id{low}$	
+		\End	
+\end{codebox}
+\begin{codebox}
+	\Procname{$\proc{Insertion-Sort-Using-Binary-Search}(A)$}
+	\li \For $j \gets 2 $ \To $\attrib{A}{length}$
+	\li \Do
+			$\id{key} \gets A[j]$
+	\li		$i \gets j - 1$
+	\li		$\id{index} \gets \proc{Binary-Search-Recursive}(A, key, 1, i)$
+	\li 	\If $A[index] < \id{key}$
+	\li			\Then 
+				$\id{index} \gets \id{index} + 1$
+				\End
+	\li		\While $i \geq \id{index}$
+	\li			\Do
+				$A[i + 1] = A[i]$
+	\li			$i = i - 1$
+				\End
+	\li		$A[i+1] = \id{key}$
+		\End
+	
+\end{codebox}
+\noindent 可见，在最坏情况下，就算使用了$\proc{Binary-Search-Recursive}$算法，也不能将其运行时间降低到$\Theta(nlgn)$。
+\end{document}
