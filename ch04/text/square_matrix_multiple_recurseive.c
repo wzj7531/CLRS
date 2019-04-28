@@ -13,7 +13,7 @@ static int C[4][4] = {{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}};
 
 void square_matrix_multiply_recursive(int m, int n, int h, int k, int cnt){
     if(cnt == 1){
-        C[m][k] += A[m][n] + B[h][k];
+        C[m][k] += A[m][n] * B[h][k];
     }
     else{
         //A11*B11
@@ -35,69 +35,11 @@ void square_matrix_multiply_recursive(int m, int n, int h, int k, int cnt){
     }
 }
 
-// int** square_matrix_multiply_recursive(int m,int n,int h,int k,int l){
-//     int** C = (int**) malloc(l * sizeof(int*));
-//     for(int i = 0; i < l; i++){
-//         C[i] = (int*)malloc(l * sizeof(int));
-//     }
-//     if(l == 1){
-//         C[0][0] = A[m][n] * B[h][k];
-//     }
-//     else{
-//         //A11*B11
-//         int** temp1 = square_matrix_multiply_recursive(m,n,h,k,l/2);
-//         //A12*B21
-//         int** temp2 = square_matrix_multiply_recursive(m,n+l/2,h+l/2,k,l/2);
-//         //A11*B12
-//         int** temp3 = square_matrix_multiply_recursive(m,n,h,k+l/2,l/2);
-//         //A12*B22
-//         int** temp4 = square_matrix_multiply_recursive(m,n+l/2,h+l/2,k+l/2,l/2);
-//         //A21*B11
-//         int** temp5 = square_matrix_multiply_recursive(m+l/2,n,h,k,l/2);
-//         //A22*B21
-//         int** temp6 = square_matrix_multiply_recursive(m+l/2,n+l/2,h+l/2,k,l/2);
-//         //A21*B12
-//         int** temp7 = square_matrix_multiply_recursive(m+l/2,n,h,k+l/2,l/2);
-//         //A22*B22
-//         int** temp8 = square_matrix_multiply_recursive(m+l/2,n+l/2,h+l/2,k+l/2,l/2);
-
-//         for(int i = 0; i < l; i++){
-//             for(int j = 0; j < l; j++){
-//                 if(i<l/2){
-//                     if(j<l/2){
-//                         C[i][j] = temp1[i][j]+temp2[i][i];
-//                     }
-//                     else{
-//                         C[i][j] = temp3[i][j-l/2]+temp4[i][j-l/2];
-//                     }
-//                 }
-//                 else{
-//                     if(j<l/2){
-//                         C[i][j] = temp5[i-l/2][j]+temp6[i-l/2][j];
-//                     }
-//                     else{
-//                         C[i][j] = temp7[i-l/2][j-l/2]+temp8[i-l/2][j-l/2];
-//                     }
-//                 }                
-//             }
-//         }   
-//     }
-
-//     for(int i = 0;i<l;i++){
-//         for(int j = 0; j<l;j++){
-//             printf("%d ",C[i][j]);
-//         }
-//         printf("\n");
-//     }
-
-//     return C;
-// }
-
 int main(){  
     square_matrix_multiply_recursive(0,0,0,0,4);
     for(int i = 0;i<4;i++){
         for(int j = 0; j<4;j++){
-            printf("%-2d ",C[i][j]);
+            printf("%2d ",C[i][j]);
         }
         printf("\n");
     }

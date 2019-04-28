@@ -1,0 +1,102 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{geometry}
+\geometry{left=2cm,top=2cm,right=2cm}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceiling}[1]{\lceil #1 \rceil}
+\usepackage{clrscode3e}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage{forest}
+\begin{document}
+\section*{4.1 最大子数组问题}
+\begin{codebox}
+\Procname{$\proc{FIND-MAX-CROSSING-SUBARRAY}(A,low,mid,high)$}
+\li $\id{left-sum} \gets -\infty$
+\li $\id{sum} \gets 0$
+\li \For $i \gets \id{mid} \Downto low$
+\li 	\Do
+			$\id{sum} \gets \id{sum} + A[i]$
+\li		\If $\id{sum} > \id{left-sum}$
+\li				\Then
+					$\id{left-sum} \gets \id{sum}$
+\li				$\id{max-left} \gets i$					
+					\End
+			\End
+\li	$\id{right-sum} \gets -\infty$
+\li $\id{sum} \gets 0$
+\li \For $j \gets \id{mid} + 1 \To high$
+\li		\Do
+			$\id{sum} \gets \id{sum} + A[j]$
+\li		\If $\id{sum} > \id{right-sum}$
+\li			\Then
+					$\id{right-sum} \gets \id{sum}$
+\li				$\id{max-right} \gets j$	
+				\End
+			\End
+			\li \Return $(\id{max-left},\id{max-right},\id{left-sum}+\id{right-sum})$
+\end{codebox}
+
+\begin{codebox}
+	\Procname{$\proc{FIND-MAXIMUM-SUBARRAY}(A,low,high)$}
+	\li	\If $\id{high} \isequal \id{low}$
+	\li		\Then 
+					\Return $(\id{low},\id{high},A[low])$
+	\li		\Else 
+					$\id{mid} \gets \floor{(\id{low}+\id{high})/2}$
+	\li			$(\id{left-low},\id{left-high},\id{left-sum}) \gets \proc{FIND-MAXIMUM-SUBARRAY}(A,low,mid)$
+	\li			$(\id{right-low},\id{right-high},\id{right-sum}) \gets \proc{FIND-MAXUMUM-SUBARRAY}(A,mid+1,high)$
+	\li			$(\id{cross-low},\id{cross-high},\id{cross-sum}) \gets \proc{FIND-MAXIMUM-SUBARRAY}(A,low,mid,high)$
+	\li			\If $\id{left-sum} \geq \id{right-sum}$ and $\id{left-sum} \geq \id{cross-sum}$
+	\li				\Then \Return $(\id{left-low},\id{left-high},\id{left-sum})$
+	\li				\ElseIf $\id{right-sum} \geq \id{left-sum}$ and $\id{right-sum} \geq \id{cross-sum}$
+	\li				\Then \Return $(\id{right-low},\id{right-high},\id{right-sum})$
+	\li				\ElseNoIf \Return $(\id{corss-low},\id{cross-high},\id{cross-sum})$
+						\End
+				\End
+\end{codebox}
+\section*{分治算法的分析}
+首先，第1行花费常量时间，对于$n \gets 1$的基本情况，也很简单：第2行花费常量时间，因此，
+\[
+	T(1) = \Theta(1)
+\]
+当$n>1$时为递归情况。第1行和第3行花费常量时间，第4行和第5行求解的子问题均为$n/2$个元素的子数组(假定原问题规模为2的幂，保证了$n/2$为整数)，因此每个子问题的求解时间为$T(n/2)$。因为需要求解两个子问题，因此第4行和第5行给总运行时间增加了$2T(n/2)$。又因为第6行花费$\Theta(n)$时间，第7-11行仅花费$\Theata(1)$时间。所以对于递归情况，我们有：
+\[
+	T(n)=
+	\begin{cases}
+		\Theta(1) & \text{若 $n=1$}\\
+		2T(n/2) + \Theta(n) & \text{若$n>1$}
+	\end{cases}
+\]
+上面递归式的解为$T(n)=\Theta(nlgn)$。
+\section*{练习}
+\paragraph*{4.1-1}
+当A的所有元素均为负数时，$\proc{Find-Maximum-SubArray}$返回什么？\\
+返回其中最大的那个负数及其在数组中的位置。
+\paragraph*{4.1-2}
+对最大子数组问题，编写暴力求解方法的伪代码，其运行时间应该为$\Theta(n^2)$
+\begin{codebox}
+	\Procname{$\proc{Find-Maximum-SubArray-Violence}(A)$}
+	\li $\id{max-sum} \gets A[0]$
+	\li $\id{left} \gets 0$
+	\li $\id{right} \gets 0$
+	\li $\id{temp-sum} \gets 0$
+	\li \For $i \gets 1 \To \attrib{A}{length}-1$
+	\li		\Do $\id{temp-sum}\gets A[i]$
+	\li		\For $j \gets i+1 \To \attrib{A}{length}$
+	\li			\Do $\id{temp-sum} = \id{temp-sum} + A[j]$
+	\li			\If $\id{temp-sum} > \id{max-sum}$
+	\li				\Then $\id{max-sum}=\id{temp-sum}$
+	\li				$\id{left} = i$
+	\li				$\id{right} = j$
+						\End
+					\End
+				\End
+	\li \Return $(\id{left},\id{right},\id{max-sum})$
+\end{codebox}
+\paragraph*{4.1-4}
+假定修改最大子数组问题的定义，允许结果为空子数组，其和为0。你应该如何修改现有算法，使它们能允许空子数组为最终结果？\\
+见代码4.1-4.c
+\paragraph*{4.1-5}
+使用如下思想为最大子数组问题设计一个非递归的、线性时间的算法。从数组的左边界开始，由左至右处理，记录到目前为止已经处理过的最大子数组。若已知$A[1 \dots j]$的最大子数组，基于如下性质讲解扩展为$A[1 \dots j+1]$的最大子数组:$A[1 \dots j+1]$的最大子数组要么是$A[1 \dots j]$的最大子数组，要么是某个子数组$A[i \dots j+1](1 \leq i \leq j+1)$。在已知$A[1 \dots j]$的最大子数组的情况下，可以在线性时间内找出形如$A[i \dots j+1]$的最大子数组。
+\end{document}
+
