@@ -7,6 +7,14 @@
 \usepackage{ctex}
 \usepackage{amsmath}
 \usepackage{forest}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=blue,      
+    urlcolor=blue,
+    citecolor=cyan,
+}
 \begin{document}
 \section*{4.1 最大子数组问题}
 \begin{codebox}
@@ -59,7 +67,7 @@
 \[
 	T(1) = \Theta(1)
 \]
-当$n>1$时为递归情况。第1行和第3行花费常量时间，第4行和第5行求解的子问题均为$n/2$个元素的子数组(假定原问题规模为2的幂，保证了$n/2$为整数)，因此每个子问题的求解时间为$T(n/2)$。因为需要求解两个子问题，因此第4行和第5行给总运行时间增加了$2T(n/2)$。又因为第6行花费$\Theta(n)$时间，第7-11行仅花费$\Theata(1)$时间。所以对于递归情况，我们有：
+当$n>1$时为递归情况。第1行和第3行花费常量时间，第4行和第5行求解的子问题均为$n/2$个元素的子数组(假定原问题规模为2的幂，保证了$n/2$为整数)，因此每个子问题的求解时间为$T(n/2)$。因为需要求解两个子问题，因此第4行和第5行给总运行时间增加了$2T(n/2)$。又因为第6行花费$\Theta(n)$时间，第7-11行仅花费$\Theta(1)$时间。所以对于递归情况，我们有：
 \[
 	T(n)=
 	\begin{cases}
@@ -95,8 +103,92 @@
 \end{codebox}
 \paragraph*{4.1-4}
 假定修改最大子数组问题的定义，允许结果为空子数组，其和为0。你应该如何修改现有算法，使它们能允许空子数组为最终结果？\\
-见代码4.1-4.c
+只需将$\proc{Find-Max-Crossing-SubArray}$修改如下(注意，这里假定数组下标从1开始)：
+\begin{codebox} 
+  \Procname{$\proc{FIND-MAX-CROSSING-SUBARRAY}(A,low,mid,high)$}
+  \li $\id{left-sum} \gets 0$
+  \li $\id{sum} \gets 0$
+  \li \For $i \gets \id{mid} \Downto low$
+  \li   \Do
+        $\id{sum} \gets \id{sum} + A[i]$ 
+  \li   \If $\id{sum} > \id{left-sum}$
+  \li       \Then 
+            $\id{left-sum} \gets \id{sum}$
+  \li       $\id{max-left} \gets i$
+            \End
+        \End
+  \li $\id{right-sum} \gets 0$
+  \li $\id{sum} \gets 0$
+  \li \For $j \gets \id{mid} + 1 \To high$
+  \li   \Do 
+        $\id{sum} \gets \id{sum} + A[j]$
+  \li   \If $\id{sum} > \id{right-sum}$
+  \li     \Then
+            $\id{right-sum} \gets \id{sum}$ 
+  \li       $\id{max-right} \gets j$
+          \End
+        \End
+  \li \Return $(\id{max-left},\id{max-right},\id{left-sum}+\id{right-sum})$
+  \end{codebox}
 \paragraph*{4.1-5}
 使用如下思想为最大子数组问题设计一个非递归的、线性时间的算法。从数组的左边界开始，由左至右处理，记录到目前为止已经处理过的最大子数组。若已知$A[1 \dots j]$的最大子数组，基于如下性质讲解扩展为$A[1 \dots j+1]$的最大子数组:$A[1 \dots j+1]$的最大子数组要么是$A[1 \dots j]$的最大子数组，要么是某个子数组$A[i \dots j+1](1 \leq i \leq j+1)$。在已知$A[1 \dots j]$的最大子数组的情况下，可以在线性时间内找出形如$A[i \dots j+1]$的最大子数组。
+\begin{codebox}
+	\Procname{$\proc{Find-Maximum-Subarray-Linear}(A)$}
+	\li	$\id{left} \gets 0$
+	\li $\id{right} \gets 0$
+	\li $\id{temp-sum} \gets A[0]$
+	\li $\id{max-sum} \gets \id{temp-sum}$
+	\li \For $j \gets 1 \To \attrib{A}{length}$
+	\li		\Do $\id{temp-sum} \gets \id{temp-sum} + a[j]$
+	\li		\If $\id{max-sum} < \id{temp-sum}$
+	\li			\Then $\id{right \gets j}$
+	\li			$\id{max-sum} \gets \id{temp-sum}$
+	\li			\Else
+	\li				\If $A[j] > \id{temp-sum}$
+	\li					\Then $\id{left} \gets j$
+	\li					$\id{right} \gets j$
+	\li					$\id{temp-sum} \gets A[j]$
+	\li					$\id{max-sum} \gets \id{temp-sum}$
+							\End
+					\End
+				\End
+	\li \Return $(\id{left},\id{right},\id{max-sum})$
+\end{codebox}
+\section*{4.2 矩阵乘法的Strassen算法}
+\begin{codebox}
+	\Procname{$\proc{SQUARE-MATRIX-MULTIPLY}(A,B)$}
+	\li $\id{n} \gets \attrib{A}{rows}$
+	\li let C be a new $n \times n$ matrix
+	\li \For $i \gets 1 \To n$
+	\li		\Do
+				\For $j \gets 1 \To n$
+	\li			\Do $c_{ij} \gets 0$
+	\li			\For $k \gets 1 \To n$
+	\li				\Do	$c_{ij} \gets c_{ij} + a_{ik} \cdot b_{kj}$
+						\End
+					\End
+				\End
+	\li	\Return $C$
+\end{codebox}
+上面过程中，由于三重for循环的每一重都恰好执行n步，而第7行每次执行都花费常量时间，因此花费$\Theta(n^3)$时间。
+\paragraph*{矩阵乘法的一个简单的分治算法}
+\begin{codebox}
+	\Procname{$\proc{SQUARE-MATRIX-MULTIPLY-RECURSIVE}(A,B)$}
+	\li $n \gets \attrib{A}{rows}$
+	\li Let $C$ be a new $n \times n$ matrix
+	\li \If $n \isequal 1$
+	\li		\Then $c_{11} \gets a_{11} \cdot b_{11}$
+	\li		\Else $patition\ A,\ B,\ and \ C$
+	\li			$C_{11} \gets \proc{SQUARE-MATRIX-MULTIPLY-RECURSIVE}(A_{11},B_{11})$\\
+	\>\>$+\proc{SQUARE-MATRIX-MULTIPLY-RECURSIVE}(A_{12},B_{21})$
+	\li			$C_{12} \gets \proc{SQUARE-MATRIX-MULTIPLY-RECURSIVE}(A_{11},B_{12})$\\
+	\>\>$+\proc{SQUARE-MATRIX-MULTIPLY-RECURSIVE}(A_{12},B_{22})$
+	\li			$C_{21} \gets	\proc{SQUARE-MATRIX-MULTIPLY-RECURSIVE}(A_{21},B_{11})$\\
+	\>\>$+\proc{SQUARE-MATRIX-MULTIPLY-RECURSIVE}(A_{22},B_{21})$
+	\li			$C_{22} \gets \proc{SQUARE-MATRIX-MULTIPLY-RECURSIVE}(A_{21},B_{12})$\\
+	\>\>$+\proc{SQUARE-MATRIX-MULTIPLY-RECURSIVE}(A_{22},B_{22})$
+				\End
+	\li	\Return $C$
+\end{codebox}
+注意，在具体的C实现中，不会真的把$A,B,C$矩阵分为12个新的子矩阵，我们可以计算下标来限定子矩阵的范围，例如，一对坐标表示子矩阵的起始位置，再用一个整数表示该子矩阵的行或者列数，就可以知道子矩阵的范围了。另外矩阵C在程序开始时初始化为具有A $\times$ B大小的矩阵，每一次递归到基本情况时，就在C上进行计算，待8次递归调用完成后，矩阵C就是A $\times$ B的结果了。
 \end{document}
-
