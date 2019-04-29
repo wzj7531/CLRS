@@ -7,14 +7,8 @@
 \usepackage{ctex}
 \usepackage{amsmath}
 \usepackage{forest}
-\usepackage{hyperref}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    filecolor=blue,      
-    urlcolor=blue,
-    citecolor=cyan,
-}
+\usepackage{mathtools}
+
 \begin{document}
 \section*{4.1 最大子数组问题}
 \begin{codebox}
@@ -190,5 +184,187 @@
 				\End
 	\li	\Return $C$
 \end{codebox}
-注意，在具体的C实现中，不会真的把$A,B,C$矩阵分为12个新的子矩阵，我们可以计算下标来限定子矩阵的范围，例如，一对坐标表示子矩阵的起始位置，再用一个整数表示该子矩阵的行或者列数，就可以知道子矩阵的范围了。另外矩阵C在程序开始时初始化为具有A $\times$ B大小的矩阵，每一次递归到基本情况时，就在C上进行计算，待8次递归调用完成后，矩阵C就是A $\times$ B的结果了。
+注意，在具体的C实现中，不会真的把$A,B,C$矩阵分为12个新的子矩阵，我们可以计算下标来限定子矩阵的范围，例如，一对坐标表示子矩阵的起始位置，再用一个整数表示该子矩阵的行或者列数，就可以知道子矩阵的范围了，这就是上述伪代码隐藏的实现细节。另外矩阵C在程序开始时初始化为具有A $\times$ B大小的矩阵，每一次递归到基本情况时，就在C上进行计算，待8次递归调用完成后，矩阵C就是A $\times$ B的结果了。\\
+现在来分析一下算法的运行时间。由于使用下标计算对$A,B,C$进行子矩阵分解，所以第5行只需$\Theta(1)$的时间，注意，使用下标计算而非通过复制元素(如果这样做则分解矩阵则需要$\Theta(n^2)$的时间)来分解矩阵对总渐进运行时间并无影响。令$T(n)$表示此过程的运行时间。对$n=1$的基本情况，只需要进行一次标量乘法(第4行)，因此
+\[
+	T(n) = \Theta(1)
+\]
+当$n>1$时是递归情况，第5行花费$\Theta(1)$的时间，第6-9行共8次递归调用，由于每次递归调用完成两个$n/2 \times n/2$矩阵乘法，因此花费时间为$T(n/2)$，8次递归调用总时间为$8T(n/2)$。还需要计算6-9行的4次矩阵加法。每个矩阵包含$n^2/4$个元素，因此每次矩阵加法花费$\Theta(n^2)$时间。由于矩阵加法的的次数是常数，第6-9行进行矩阵假发的总时间为$\Theta(n^2)$(这里仍然使用下标计算的方法讲矩阵加法的结果放置于C的正确位置，由此带来的额外开销为每个元素$\Theta(1)$)。因此，递归情况的总时间为分解时间、递归调用时间以及矩阵加法时间之和：
+\[
+	T(n) = \Theta(1)+8\Theta(n/2)+\Theta(n^2)=8T(n/2)+\Theta(n^2)
+\]
+注意，如果通过复制元素来实现矩阵的分解，额外开销为$\Theta(n^2)$，递归式不会发生改变，只是总运行时间将会提高常数倍。综上，
+\[
+	T(n) = 
+	\begin{cases}
+	\Theta(1) & \text{若n=1}\\
+	8\Theta(n/2)+\Theta(n^2) & \text{若n>1}
+	\end{cases}
+\]
+利用后面学习的主定理，得到的解为$T(n)=\Theta(n^3)$，因此简单的分治算法并不优于暴力算法。注意，因子8决定了递归树中每个节点有几个子节点，进而决定了树的每一层为总和贡献了多少项。如果省略因子8，递归树就变为线性结构，而不是“茂盛的”了，树的每一层只为总和贡献了一项。
+\section*{Strassen方法}
+Strassen方法的核心思想是用常数次的矩阵加法的代价减少一次矩阵乘法。其递归式如下所示:
+\[
+	T(n) = 
+	\begin{cases}
+		\Theta(1) & \text{若n=1} \\
+		7\Theta(n/2) + \Theta(n^2) &\text{若n>1}
+	\end{cases}
+\]
+再次利用后面的主定理，$T(n)=\Theta(n^{lg7})$。
+\section*{练习}
+\paragraph*{4.2-1}
+使用Strassen算法计算如下矩阵乘法:
+\[
+	\begin{gathered}
+		\begin{bmatrix}
+			1 & 3\\
+			7 & 5
+		\end{bmatrix}
+		\quad
+		\begin{bmatrix}
+			6 & 8\\
+			4 & 2
+		\end{bmatrix}
+	\end{gathered}
+\]
+给出计算过程。\\
+我们从步骤2开始计算$S_1,S_2,\cdots,S_{10}$:
+\[
+	\begin{align}
+		%下面一定要空一行，否则S_1等式就不会出现
+
+		S_1 = B_{12}-B_{22}=
+		\begin{bmatrix}
+			8
+		\end{bmatrix}
+		-
+		\begin{bmatrix}
+			2
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+			6
+		\end{bmatrix} \\
+
+		S_2 = A_{11}+A_{12}=
+  	\begin{bmatrix}
+ 		1
+  	\end{bmatrix}
+		+
+		\begin{bmatrix}
+		3
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+		4
+		\end{bmatrix} \\
+
+		S_3 = A_{21}+A_{22}=
+  	\begin{bmatrix}
+ 		7
+  	\end{bmatrix}
+		+
+		\begin{bmatrix}
+		5
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+		12
+		\end{bmatrix} \\
+
+		S_4 = B_{21}+B_{11}=
+  	\begin{bmatrix}
+ 		4
+  	\end{bmatrix}
+		-
+		\begin{bmatrix}
+		6
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+		-2
+		\end{bmatrix} \\
+
+		S_5 = A_{11}+A_{22}=
+  	\begin{bmatrix}
+ 		1
+  	\end{bmatrix}
+		+
+		\begin{bmatrix}
+		5
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+		6
+		\end{bmatrix} \\
+
+		S_6 = B_{11}+B_{22}=
+  	\begin{bmatrix}
+ 		6
+  	\end{bmatrix}
+		+
+		\begin{bmatrix}
+		2
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+		8
+		\end{bmatrix} \\
+
+	  S_7 = A_{12}-A_{22}=
+  	\begin{bmatrix}
+ 		3
+  	\end{bmatrix}
+		-
+		\begin{bmatrix}
+		5
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+		-2
+		\end{bmatrix} \\
+
+	  S_8 = B_{21}+B_{22}=
+  	\begin{bmatrix}
+ 		4
+  	\end{bmatrix}
+		+
+		\begin{bmatrix}
+		2
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+		6
+		\end{bmatrix} \\
+
+	  S_9 = A_{11}-A_{21}=
+  	\begin{bmatrix}
+ 		1
+  	\end{bmatrix}
+		-
+		\begin{bmatrix}
+		7
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+		-6
+		\end{bmatrix} \\
+
+		S_{10} = B_{11}+B_{12}=
+  	\begin{bmatrix}
+ 		6
+  	\end{bmatrix}
+		+
+		\begin{bmatrix}
+		8
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+		14
+		\end{bmatrix}
+	\end{align}
+\]
+然后进行步骤3的计算:
+
 \end{document}

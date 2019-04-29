@@ -4,6 +4,10 @@
 
 .vscode
 
+# Latex
+*.log
+*.aux
+
 ### C ###
 # Prerequisites
 *.d
