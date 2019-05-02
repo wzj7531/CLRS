@@ -229,142 +229,129 @@ Strassen方法的核心思想是用常数次的矩阵加法的代价减少一次
 	\end{gathered}
 \]
 给出计算过程。\\
-我们从步骤2开始计算$S_1,S_2,\cdots,S_{10}$:
-\[
-	\begin{align}
-		%下面一定要空一行，否则S_1等式就不会出现
-
-		S_1 = B_{12}-B_{22}=
-		\begin{bmatrix}
-			8
-		\end{bmatrix}
-		-
-		\begin{bmatrix}
-			2
-		\end{bmatrix}
-		=
-		\begin{bmatrix}
-			6
-		\end{bmatrix} \\
-
-		S_2 = A_{11}+A_{12}=
-  	\begin{bmatrix}
- 		1
-  	\end{bmatrix}
-		+
-		\begin{bmatrix}
-		3
-		\end{bmatrix}
-		=
-		\begin{bmatrix}
-		4
-		\end{bmatrix} \\
-
-		S_3 = A_{21}+A_{22}=
-  	\begin{bmatrix}
- 		7
-  	\end{bmatrix}
-		+
-		\begin{bmatrix}
-		5
-		\end{bmatrix}
-		=
-		\begin{bmatrix}
-		12
-		\end{bmatrix} \\
-
-		S_4 = B_{21}+B_{11}=
-  	\begin{bmatrix}
- 		4
-  	\end{bmatrix}
-		-
-		\begin{bmatrix}
-		6
-		\end{bmatrix}
-		=
-		\begin{bmatrix}
-		-2
-		\end{bmatrix} \\
-
-		S_5 = A_{11}+A_{22}=
-  	\begin{bmatrix}
- 		1
-  	\end{bmatrix}
-		+
-		\begin{bmatrix}
-		5
-		\end{bmatrix}
-		=
-		\begin{bmatrix}
-		6
-		\end{bmatrix} \\
-
-		S_6 = B_{11}+B_{22}=
-  	\begin{bmatrix}
- 		6
-  	\end{bmatrix}
-		+
-		\begin{bmatrix}
-		2
-		\end{bmatrix}
-		=
-		\begin{bmatrix}
-		8
-		\end{bmatrix} \\
-
-	  S_7 = A_{12}-A_{22}=
-  	\begin{bmatrix}
- 		3
-  	\end{bmatrix}
-		-
-		\begin{bmatrix}
-		5
-		\end{bmatrix}
-		=
-		\begin{bmatrix}
-		-2
-		\end{bmatrix} \\
-
-	  S_8 = B_{21}+B_{22}=
-  	\begin{bmatrix}
- 		4
-  	\end{bmatrix}
-		+
-		\begin{bmatrix}
-		2
-		\end{bmatrix}
-		=
-		\begin{bmatrix}
-		6
-		\end{bmatrix} \\
-
-	  S_9 = A_{11}-A_{21}=
-  	\begin{bmatrix}
- 		1
-  	\end{bmatrix}
-		-
-		\begin{bmatrix}
-		7
-		\end{bmatrix}
-		=
-		\begin{bmatrix}
-		-6
-		\end{bmatrix} \\
-
-		S_{10} = B_{11}+B_{12}=
-  	\begin{bmatrix}
- 		6
-  	\end{bmatrix}
-		+
-		\begin{bmatrix}
-		8
-		\end{bmatrix}
-		=
-		\begin{bmatrix}
-		14
-		\end{bmatrix}
-	\end{align}
-\]
+\paragraph{解:}我们从步骤2开始计算$S_1,S_2,\cdots,S_{10}$:
+\begin{align*}
+	S_1 = B_{12}-B_{22} &=
+	\begin{bmatrix}
+	8
+	\end{bmatrix}
+	-
+	\begin{bmatrix}
+	2
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+	6
+	\end{bmatrix}\\
+	S_2 = A_{11}+A_{12} &=
+	\begin{bmatrix}
+	1
+	\end{bmatrix}
+	+
+	\begin{bmatrix}
+	3
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+	4
+	\end{bmatrix} \\
+	S_3 = A_{21}+A_{22} &=
+	\begin{bmatrix}
+	7
+	\end{bmatrix}
+	+
+	\begin{bmatrix}
+	5
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+	12
+	\end{bmatrix} \\	
+	S_4 = B_{21}+B_{11} &=
+	\begin{bmatrix}
+	4
+	\end{bmatrix}
+	-
+	\begin{bmatrix}
+	6
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+	-2
+	\end{bmatrix} \\	
+	S_5 = A_{11}+A_{22} &=
+	\begin{bmatrix}
+	1
+	\end{bmatrix}
+	+
+	\begin{bmatrix}
+	5
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+	6
+	\end{bmatrix} \\	
+	S_6 = B_{11}+B_{22} &=
+	\begin{bmatrix}
+	6
+	\end{bmatrix}
+	+
+	\begin{bmatrix}
+	2
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+	8
+	\end{bmatrix} \\	
+	S_7 = A_{12}-A_{22} &=
+	\begin{bmatrix}
+	3
+	\end{bmatrix}
+	-
+	\begin{bmatrix}
+	5
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+	-2
+	\end{bmatrix} \\	
+	S_8 = B_{21}+B_{22} &=
+	\begin{bmatrix}
+	4
+	\end{bmatrix}
+	+
+	\begin{bmatrix}
+	2
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+	6
+	\end{bmatrix} \\	
+	S_9 = A_{11}-A_{21} &=
+	\begin{bmatrix}
+	1
+	\end{bmatrix}
+	-
+	\begin{bmatrix}
+	7
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+	-6
+	\end{bmatrix} \\	
+	S_{10} = B_{11}+B_{12} &=
+	\begin{bmatrix}
+	6
+	\end{bmatrix}
+	+
+	\begin{bmatrix}
+	8
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+	14
+	\end{bmatrix}
+\end{align*}
 然后进行步骤3的计算:
 
 \end{document}
