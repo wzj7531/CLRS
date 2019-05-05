@@ -353,5 +353,63 @@ Strassen方法的核心思想是用常数次的矩阵加法的代价减少一次
 	\end{bmatrix}
 \end{align*}
 然后进行步骤3的计算:
+\begin{align*}
+	P_{1} = A_{11} \cdot S_1 &=
+	\begin{bmatrix}
+		6
+	\end{bmatrix}\\
+	P_{2} = S_{2} \cdot B_{22} &=
+	\begin{bmatrix}
+		8
+	\end{bmatrix}\\
+	P_{3} =S_{3} \cdot B_{11} &=
+	\begin{bmatrix}
+		72
+	\end{bmatrix}\\
+	P_{4} =A_{22} \cdot S_{4} &=
+	\begin{bmatrix}
+		-10
+	\end{bmatrix}\\
+	P_{5} =S_{5} \cdot S_{6} &=
+	\begin{bmatrix}
+		48
+	\end{bmatrix}\\
+	P_{6} = S_{7} \cdot S_{8} &=
+	\begin{bmatrix}
+		-12
+	\end{bmatrix}\\
+	P_{7} = S_{9} \cdot S_{10} &=
+	\begin{bmatrix}
+		-84
+	\end{bmatrix}
+\end{align*}
+然后进行步骤4的计算:
+\begin{align*}
+	C_{11} = P_{5} + P_{4} - P_{2} + P{6} &=
+	\begin{bmatrix}
+		18
+	\end{bmatrix}\\
+	C_{12} = P_{1} + P_{2} &=
+	\begin{bmatrix}
+		14
+	\end{bmatrix}\\
+	C_{21} = P_{3} + P_{4} &=
+	\begin{bmatrix}
+		62
+	\end{bmatrix}\\
+	C_{22} = P_{5}+P{1}-P_{3}-P_{7} &=
+	\begin{bmatrix}
+		66
+	\end{bmatrix}
+\end{align*}
+最后，得出结果:
+\[
+	\begin{bmatrix}
+	18 & 14\\
+	62 & 66
+	\end{bmatrix}
+\]
+	\paragraph*{4.2-2}
+为Strassen算法编写伪代码。
 
 \end{document}
