@@ -1,0 +1,47 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{geometry}
+\geometry{left=2cm,top=2cm,right=2cm}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceiling}[1]{\lceil #1 \rceil}
+\usepackage{clrscode3e}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage{forest}
+\usepackage{mathtools}
+
+\begin{document}
+\section*{4.3用代入法求解递归式}
+\paragraph*{}用代入法求解递归式分为两步:
+\paragraph*{}1.猜测解的形式;
+\paragraph*{}2.用数学归纳法求出解中的常数，并证明解是正确的。
+\paragraph*{}可以用代入法为递归式建立上界或下界。例如,对于如下的递归式:
+\[
+	T(n) = 2T(\floor{n/2})+n
+\]
+猜测其解为$T(n)=O(nlgn)$.代入法要求证明，恰当地选择常数$c>0$，可有$T(n) \leq cnlgn$。首先假定此上界对所有正数$m<n$均成立，特别是对于$m=\floor{n/2}$，有$T(\floor{n/2}) \leq c\floor{n/2}lg{\floor{n/2}}$。将其代入递归式得到:
+\[
+	T(n)\leq 2(c\floor{n/2}lg(\floor{n/2}))+n\leq cnlg(n/2)+n=cnlgn-cnlg2+n\leq cnlgn-cn+n \leq cnlgn
+\]
+其中，只要$c\geq 1$，最后一步都会成立。
+\paragraph*{}数学归纳法要求我们证明解在边界条件下也成立。例如，为了方便讨论，假设$T(1)=1$是递归式唯一的边界条件。对$n=1$，边界条件$T(n)\leq cnlgn$推导出$T(1)\leq c1lg1=0$,这与$T(1)=1$矛盾。因此我们归纳证明的基本情况不成立。为了克服这个障碍，我们保留这个麻烦的边界条件$T(1)=1$，但将其从归纳证明中去除。首先观察到对于$n>3$，递归式并不直接依赖于$T(1)$。因此将归纳证明中的基本情况$T(1)$替换为$T(2)$和$T(3)$,并令$n_0=2$。这里，我们将递归式的基本情况($T(1)=1$)和归纳证明的基本情况($T(2)$和$T(3)$)区分开来了。由$T(1)=1$推导出$T(2)=4$和$T(3)=5$。现在可以完成归纳证明，对某个常数$c\geq 1$，$T(n)\leq cnlgn$，方法是选择足够大的$c$，满足$T(2)\leq c2lg2$和$T(3)\leq c3lg3$。事实上，任何$c\geq 2$都能保证$n=2$和$n=3$的基本情况成立。
+\subsection*{微妙的细节}
+\paragraph*{}有时虽然猜测出了递归式解的渐进界，但却在归纳证明时失败了。问题常常出在归纳假设不够强，无法证出准确的界。当遇到这种障碍时，如果修改猜测，将它减去一个低阶项，数学证明常常能顺利进行。考虑下面的递归式:
+\[
+	T(n)=T(\floor{n/2})+T(\ceiling{n/2})+1
+\]
+我们猜测解为$T(n)=0(n)$，并尝试证明对某个恰当选出的常数$c$，$T(n)\leq cn$成立。将我们的猜测代入递归式，得到:
+\[
+	T(n)\leq c\floor{n/2}+c\ceiling{n/2}+1=cn+1
+\]
+这并不意味着对任意$c$都有$T(n)\leq cn$。克服这个困难的方法是从先前的猜测中减去一个低阶项。新的猜测为$T(n)\leq cn-d$，$d$是大于等于0的一个常数。我们现在有:
+\[
+	T(n)\leq (c\floor{n/2}-d)+(c\ceiling{n/c}-d)+1=cn-2d\leq cn-d
+\]
+只要$d\geq 1$，此式就成立。
+\subsection*{避免陷阱}
+使用渐进符号很容易出错。例如，递归式$T(n)=2T(\floor{n/2})+n$，我们可能错误的“证明”$T(n)=O(n)$:猜测$T(n)\leq cn$，并论证:
+\[
+	T(n)\leq 2(c\floor{n/2})+n\leq cn+n=O(n)
+\]
+错误在于我们并未证出与归纳假设严格一致的形式，也即:$T(n)\leq cn$。因此，当要证明$T(n)=O(n)$时，需要显式地证出$T(n)\leq cn$。
+\end{document}
