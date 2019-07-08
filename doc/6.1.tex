@@ -1,0 +1,157 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{geometry}
+\geometry{left=1.5cm,top=1cm,right=1.5cm}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceiling}[1]{\lceil #1 \rceil}
+\usepackage{clrscode3e}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage{forest}
+\usepackage{mathtools}
+\begin{document}
+\section*{6.1 堆}
+(二叉)堆是一个数组，它可以被看成一个近似的完全二叉树，数上的每一个节点对应数组中的一个元素。除了最底层外，该数是完全充满的，而且是从左向右填充。表示堆的的数组A包括两个属性:$A.length$给出数组元素的个数，$A.heap-size$表示有多少个堆元素存储在该数组中。也就是说，虽然$A[1 \twodots A.length]$可能都存有数据，但只有$A[1\twodots \attrib{A}{heap-size}]$中存放的是堆的有效元素，这里，$0\leq \attrib{A}{heap-size} \leq A.length$。树的根节点是$A[1]$,这样给定一个节点的下标$i$，可以计算得到它的父节点、左子节点和右子节点的下标:
+\begin{codebox}
+	\Procname{$\proc{PARENT}(i)$}
+	\li \Return \floor{i/2}  
+\end{codebox}
+\begin{codebox}
+	\Procname{$\proc{LEFT}(i)$}
+	\li \Return $2i$
+\end{codebox}
+\begin{codebox}
+	\Procname{$\proc{RIGHR}(i)$}
+	\li \Return $2i+1$
+\end{codebox}
+注意:计算$\floor{i/2}$向右移动1位，计算$2i$向左移动1位，计算$2i+1$向左移动1位，并在低位加1。
+\begin{center}
+\begin{forest}
+	for tree={circle,draw,align=center}
+	[16 ,label=1 
+		[14,label=2 
+			[8,label=4 
+				[2,label=8] 
+				[4,label=9]
+			] 
+				[7,label=5 
+					[1,label=10]
+				]
+		] 
+	[10,label=3 
+		[9,label=6] 
+		[3,label=7]]]
+\end{forest}
+\end{center}
+\paragraph*{}上图是以二叉树的形式展现的一个最大堆。每个节点圆圈内部的数字表示数组元素，而节点上方的数字则是其在数组中的下标，该树的高度为3，下标为4的节点高度为1。
+\paragraph*{}二叉堆可以分为两种形式:最大堆和最小堆，在最大堆中，除了根节点外的所有节点都需要满足:
+\[
+	A[PARENT(i)]\geq A[i]
+\]
+因此，最大堆中的最大元素存放在根节点中，子树所包含的节点的值都不大于该子树根节点的值。而在最小堆中，除了根节点外的所有节点都需要满足:
+\[
+	A[PARENT(i)]\leq A[i]
+\]
+最小堆中的最小元素存放在根节点中。另外，在堆排序时我们使用的是最大堆，在构建优先队列时使用最小堆。下面是关于堆(树)的一些性质:
+\begin{itemize}
+	\item[1.]n个元素的堆的高度为$\floor{lgn}$；
+	\item[2.]当用数组表示存储$n$个元素的堆时，叶节点下标分别是$\floor{n/2}+1$，$\floor{n/2}+2$，$\dots$，$n$；
+	\item[3.]堆中的节点的高度就为该节点到叶节点最长简单路径上边的数目；
+	\item[4.]堆的高度即为根节点的高度；
+	\item[5.]既然一个包含$n$个元素的堆可以看做一颗完全二叉树，那么该堆的高度是$\Theta(lgn)$；
+	\item[6.]堆结构上的基本操作的运行时间至多与树的高度成正比，即时间复杂度为$O(lgn)$。
+\end{itemize}
+\section*{6.2 维护堆的性质}
+\begin{codebox}
+	\Procname{$\proc{MAX-HEAPIFY}(A,i)$}
+	\li $l \gets LEFT(i)$
+	\li $r \gets RIGHT(i)$
+	\li \If $l\leq \attrib{A}{heap-size}$ and $A[l]>A[i]$
+	\li 	\Then
+					$\id{larges} \gets l$
+	\li		\Else $\id{largest} \gets i$
+				\End
+	\li \If $r\leq \attrib{A}{heap-size}$ and $A[r]>A[\id{largest}]$
+	\li		\Then
+					$\id{largest}\gets r$
+				\End
+	\li	\If $\id{largest} \neq i$ 
+	\li		\Then
+					exchange $A[i]$ and $A[\id{largest}]$
+	\li			\proc{MAX-HEAPIFY}(A,\id{largest})
+				\End
+\end{codebox}
+对于一颗以$i$为根节点、大小为$n$的子树，$\proc{MAX-HEAPIFY}$的时间代价包括:
+\begin{itemize}
+	\item[1.]调整$A[i]$、$A[\proc{LEFT}(i)]$和$A[\proc{RIGHT}(i)]$的关系的时间代价$\Theta(1)$；
+	\item[2.]加上在一颗以$i$的一个子节点为根节点的子树上运行$\proc{MAX-HEAPIFY}$的时间代价(这里假设递归调用会发生)。
+\end{itemize}
+因为每个子树的大小至多为$2n/3$(最坏情况发生在树的最底层恰好半满的时候)，我们可以用下面的这个递归式来刻画$\proc{MAX-HEAP}$的运行时间：
+\[
+	T(n)\leq T(2n/3)+\Theta(1)
+\]
+根据主定理的情况2，上述递归式的解为$T(n)=O(lgn)$。也就是说，对于一个树高为$h$的节点来说，$\proc{MAX-HEAPIFY}$DE时间复杂度为$O(lgn)$。
+\paragraph*{}这里有两个问题需要理解:
+\begin{itemize}
+	\item[1.]$2n/3$是怎么得来的？以及最坏情况发生在树的最底层恰好半满？
+	\item[2.]如何对$T(n) \leq T(2n/3)+\Theta(1)$使用主定理的情况?
+\end{itemize}
+对于第一个问题，我们首先理解什么是一颗半满的树，直观的理解一颗半满的树，就是画出一颗半满的树:
+\begin{center}
+	\begin{forest}
+		for tree={circle,draw,align=center}
+		[11 
+			[14 
+				[4 
+					[2] 
+					[8]
+				] 
+				[7 
+					[1] 
+					[3]
+				]
+			] 
+			[10 
+				[9] 
+				[3]
+			]
+		]
+	\end{forest}
+\end{center}
+上图展示的树最底层就是半满的。在上面这棵树中，假设我们从根节点16开始维护最大堆的性质，输入规模即为$n=11$，在调整完16、14和10的父子顺序后($\Theta(1)$)，其左子树如下所示:
+\begin{center}
+	\begin{forest}
+		for tree={circle,draw,align=center}
+			[11 
+				[4 
+					[2] 
+					[8]
+				] 
+				[7 
+					[1] 
+					[3]
+				]
+			] 
+			[10 
+				[9] 
+				[3]
+			]
+	\end{forest}
+\end{center}
+此时对其递归调用$\proc{MAX-HEAPFY}$，其输入规模即为上面这棵树的节点个数，找到了其输入规模我们就可以知道其时间复杂度。现在的问题是，对于一棵半满的树，其子树的节点数最多为多少？显然，对于一棵半满的树，根节点的左子树的节点个数即为问题的答案。要解答这个问题我们需要知道一个结论:对于完全二叉树或底层半满的二叉树，其叶子节点个数比其他节点个数正好多1个(也可以表述为不具有子节点的节点的个数比具有两个子节点的节点的个数多1个)。我们假设根节点的右子树的节点个数为$k$，那么其左子树的节点个数为$k+(k+1)=2k+1$，这棵树的节点总数为左子树的节点个数加右子树的节点个数再加上根节点，即$1+2k+1+k=3k+2$。那么左子树的节点个数与节点总数之比即为$\frac{2k+1}{3k+2}$，所以左子树最多是节点总数的$2/3$，换句话说，假设一棵树的节点树为$n$那么其左子树节点总数就接近$2n/3$，这就是$2n/3$的由来。
+\paragraph*{}第二个问题，对于递归树:
+\[
+	T(n)=T(2n/3)+\Theta(1)
+\]
+利用主定理情况2，我们有$a=1$，$b=3/2$，$f(n)=\Theta(1)$，因此，$n^{log_b{a}}=n^{log_{3/2}{1}}=n^0=1$。由于$f(n)=\Theta(n^{log_b{a}})=\Theta(1)$，因此利用情况2，从而得到解为$T(n)=\Theta(lgn)=O(lgn)$。
+\section*{6.3 建堆}
+可以用自底向上的方法利用过程$\proc{MAX-HEAPIFY}$把一个大小为$n=\attrib{A}{length}$的数组$A[1 \dots n]$转换为最大堆。我们知道子数组$A[\floor{n/2}+1\dots n]$中的元素都是树的叶节点。每个叶节点都可以看成只包含一个元素的堆。过程$\proc{BUILD-MAX-HEAPIFY}$对树中的其他节点都调用一次$\proc{MAX-HEAPIFY}$。
+\begin{codebox}
+	\Procname{$\proc{BUILD-MAX-HEAPIFY}(A)$}
+	\li \attrib{A}{heap-size} \gets \attrib{A}{length}
+	\li \For $i \gets \floor{\attrib{A}{length}/2}$ \Downto 1
+	\li		\Then
+				$\proc{MAX-HEAPIFY}(A,i)$
+\end{codebox}
+我们可以用下面的方法简单地估算$\proc{BUILD-MAX-HEAP}$运行时间的上界。每次调用$\proc{MAX-HEAPIFY}$的时间复杂度是$O(lgn)$，$\proc{BUILD-MAX-HEAP}$需要$O(n)$次这样的调用。因此总的时间复杂度是$O(nlgn)$。当然这个上界虽然正确，但不是渐进紧确的。
+\paragraph*{}我们还可以进一步得到一个更紧确的界。可以观察到，不同节点运行$\proc{MAX-HEAPIFY}$的时间与该节点的高度有关，而且大部分的节点的高度都很小。因此利用如下性质可以得到一个更紧确的界:包含$n$个元素的堆的高度为$\floor{lgn}$，高度为$h$的堆最多包含
+\end{document}

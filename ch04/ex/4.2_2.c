@@ -23,7 +23,6 @@ int* matrix_add(int cnt,int cnt_A,int cnt_B,int* A,int* B,int m,int n,int h,int 
     return C;
 }
 
-
 int* square_matrix_multiply_strassen(int cnt,int cnt_A,int cnt_B,int* A,int* B,int m, int n, int h, int k){
     int* C = (int*)malloc(sizeof(int) * cnt * cnt);
     if(cnt == 1){

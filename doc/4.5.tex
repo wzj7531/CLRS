@@ -1,0 +1,29 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{geometry}
+\geometry{left=1.5cm,top=2cm,right=1.5cm}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceiling}[1]{\lceil #1 \rceil}
+\usepackage{clrscode3e}
+\usepackage{ctex}
+\usepackage{amsmath}
+\usepackage{forest}
+\usepackage{mathtools}
+
+\begin{document}
+\section*{4.5 用主方法求解递归式}
+\subsection*{主定理}
+\paragraph*{定理4.1(主定理)}令$a\geq 1$和$b>1$是常数，$f(n)$是一个函数，$T(n)$是定义在非负整数上的递归式:
+\[
+	T(n) = aT(n/b)+f(n)
+\]
+其中我们讲$n/b$解释为$\floor{n/b}$或$\ceiling{n/b}$。那么$T(n)$有如下的渐进界:
+\begin{itemize}
+	\item[1.]
+		若对某个常数$\epsilon>0$有$f(n)=O(n^{log_b{a}-\epsilon})$，则$T(n)=\Theta(n^{log_b{a}})$。
+	\item[2.]
+		若$f(n)=\Theta(n^{log_b{a}})$,则$T(n)=\Theta(n^{log_b{a}}lgn)$。
+	\item[3.]
+		若对某个常数$\epsilon>0$有$f(n)=\Omega(n^{log_b{a}+\epsilon})$,且对某个常数$c<1$和所有足够大的$n$有$af(n/b)\leq cf(n)$，则$T(n)=\Theta(f(n))$
+\end{itemize}		
+
+\end{document}

@@ -44,4 +44,43 @@
 	T(n)\leq 2(c\floor{n/2})+n\leq cn+n=O(n)
 \]
 错误在于我们并未证出与归纳假设严格一致的形式，也即:$T(n)\leq cn$。因此，当要证明$T(n)=O(n)$时，需要显式地证出$T(n)\leq cn$。
+\section*{练习}
+\paragraph*{4.3-1}证明:$T(n)=T(n-1)+n$的解为$O(n^2)$.
+\paragraph*{证明:}选择常数$c>0$，使得:
+\[T(n)\leq cn^2\]
+则有:
+\[T(n-1) \leq c(n-1)^2\]
+从而:
+\begin{equation*}
+	\begin{split}
+		T(n)&=T(n-1)+n\\
+		& \leq c(n-1)^2+n\\
+		&=cn^2-2nc+c+n
+	\end{split}
+\end{equation*}
+我们的目的是找到这样的$c$，使得:
+\[cn^2-2nc+c+n \leq cn^2\]
+那么$c$就要满足下面的条件:
+\[c\geq \frac{n}{2n-1}\]
+由于$n\geq 1$，可知:
+\[\frac{n}{2n-1}\leq 1\]
+所以只要选择$c\geq 1$就有$T(n)=O(n^2)$，得证。
+\paragraph*{4.3-2}证明:$T(n)=T(\ceiling{n/2})+1$的解为$O(lgn)$。
+\paragraph*{证明:}选择常数$c>0$，使得:
+\[T(n) \leq clgn\]
+那么，可知:
+\[T(\ceiling{n/2})\leq clg(\ceiling{n/2})\]
+从而:
+\begin{equation*}
+	\begin{split}
+		T(n)&=T(\ceiling{n/2})+1\\
+		& \leq clg(\ceiling{n/2})+1
+	\end{split}
+\end{equation*}
+由于$\ceiling{n/2}<n/2+1$,所以上式中的:
+\[clg(\ceiling{n/2})+1\leq clg(n/2+1)+1\]
+所以，要使得$clg(\ceiling{n/2})+1\leq clgn$，只需要满足:
+\[clg(n/2+1)+1 \leq clgn\]
+我们知道在渐进条件下:\[lg(n/2+1)\approx lg(n/2)\]
+那么只需满足$clg(n/2)+1\leq clgn$，得出$c\geq 1$。也就是说，只要选择$c\geq 1$,就有$T(n)=O(lgn)$。得证。
 \end{document}
