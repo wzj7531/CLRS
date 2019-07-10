@@ -1,15 +1,20 @@
-\documentclass[a4paper,11pt]{ctexrep}
-\usepackage{geometry}
-\geometry{left=1.5cm,top=2cm,right=1.5cm}
-\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
-\newcommand{\ceiling}[1]{\lceil #1 \rceil}
-\usepackage{clrscode3e}
-\usepackage{ctex}
-\usepackage{amsmath}
-\usepackage{forest}
-\usepackage{mathtools}
-
+\documentclass[a4paper,11pt]{ctexbook}
+\usepackage{mypreamble}
 \begin{document}
 \setcounter{chapter}{8}
 \chapter{中位数和顺序统计量}
+在一个由$n$个元素组成的集合中，第$ i $个\textbf{顺序统计量}(order statistic)是该集合中第$ i $小的元素。例如，在一个元素集合中，\textbf{最小值}是第1个顺序统计量$ (i = 1) $，\textbf{最大值}是第$ n $个顺序统计量$ (i=n)$。用非形式化的描述来说，一个\textbf{中位数}(median)是它所属集合的“中点元素”。当$ n $为奇数时，中位数是唯一的，位于$ i = (n+1)/2 $处。当$ m $为偶数时，存在两个中位数，分别位于$ i=n/2 $和$ i=n/2+1 $处。如果不考虑$ n $的奇偶性，中位数总是出现在$ i=\floor{(n+1)/2} $处(\textbf{下中位数})和$ i=\ceiling{(n+2)/2} $处(\textbf{上中位数})。为了简便起见，本书中所用的“中位数”都是指下中位数。
+
+本章讨论\textbf{从一个由$ n $个互异的元素构成的集合中选择第$ i $个顺序统计量的问题}。为了方便起见，假设集合中的元素都是互异的，但实际上我们所作的都可以推广到集合中包含重复元素的情形。我们将这一问题形式化定义为如下的\textbf{选择问题}：
+
+\textbf{输入：}一个包含$ n $个(互异的)数的集合$ A $和一个整数$ i $，$ 1\leq i \leq n $。
+
+\textbf{输出：}元素$ x \in A $，且$ A $中恰好有$ i-1 $个其他元素小于它。
+
+我们可以在$ O(nlgn) $时间内解决这个问题。因为我们可以用堆排序或归并排序对输入数据进行排序，然后在输出数组中根据下标找出第$ i $个元素即可。本章将介绍一些更快的算法。
+\section{最小值和最大值}
+在一个有$ n $个元素的集合中，需要多少次才能确定其最小元素呢？我们可以很容易地给出$ n-1 $次比较这个上界：依次变量集合中的每个元素，并记录下当前最小元素。在下面的程序中，我们假设该集合元素存放在数组$ A $中，且$ A.length=n $:
+\begin{codebox}
+	\Procname{$\proc{MINIMUM}(A)$}
+\end{codebox}
 \end{document}
