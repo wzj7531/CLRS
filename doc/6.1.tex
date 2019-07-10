@@ -13,7 +13,7 @@
 (二叉)堆是一个数组，它可以被看成一个近似的完全二叉树，数上的每一个节点对应数组中的一个元素。除了最底层外，该数是完全充满的，而且是从左向右填充。表示堆的的数组A包括两个属性:$A.length$给出数组元素的个数，$A.heap-size$表示有多少个堆元素存储在该数组中。也就是说，虽然$A[1 \twodots A.length]$可能都存有数据，但只有$A[1\twodots \attrib{A}{heap-size}]$中存放的是堆的有效元素，这里，$0\leq \attrib{A}{heap-size} \leq A.length$。树的根节点是$A[1]$,这样给定一个节点的下标$i$，可以计算得到它的父节点、左子节点和右子节点的下标:
 \begin{codebox}
 	\Procname{$\proc{PARENT}(i)$}
-	\li \Return \floor{i/2}  
+	\li \Return$ \floor{i/2}  $
 \end{codebox}
 \begin{codebox}
 	\Procname{$\proc{LEFT}(i)$}
@@ -147,10 +147,11 @@
 可以用自底向上的方法利用过程$\proc{MAX-HEAPIFY}$把一个大小为$n=\attrib{A}{length}$的数组$A[1 \dots n]$转换为最大堆。我们知道子数组$A[\floor{n/2}+1\dots n]$中的元素都是树的叶节点。每个叶节点都可以看成只包含一个元素的堆。过程$\proc{BUILD-MAX-HEAPIFY}$对树中的其他节点都调用一次$\proc{MAX-HEAPIFY}$。
 \begin{codebox}
 	\Procname{$\proc{BUILD-MAX-HEAPIFY}(A)$}
-	\li \attrib{A}{heap-size} \gets \attrib{A}{length}
-	\li \For $i \gets \floor{\attrib{A}{length}/2}$ \Downto 1
+	\li $\attrib{A}{heap-size} \gets \attrib{A}{length}$
+	\li \For $i \gets \floor{\attrib{A}{length}/2} \Downto 1 $
 	\li		\Then
 				$\proc{MAX-HEAPIFY}(A,i)$
+			\End
 \end{codebox}
 我们可以用下面的方法简单地估算$\proc{BUILD-MAX-HEAP}$运行时间的上界。每次调用$\proc{MAX-HEAPIFY}$的时间复杂度是$O(lgn)$，$\proc{BUILD-MAX-HEAP}$需要$O(n)$次这样的调用。因此总的时间复杂度是$O(nlgn)$。当然这个上界虽然正确，但不是渐进紧确的。
 \paragraph*{}我们还可以进一步得到一个更紧确的界。可以观察到，不同节点运行$\proc{MAX-HEAPIFY}$的时间与该节点的高度有关，而且大部分的节点的高度都很小。因此利用如下性质可以得到一个更紧确的界:包含$n$个元素的堆的高度为$\floor{lgn}$，高度为$h$的堆最多包含
