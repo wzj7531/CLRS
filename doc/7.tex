@@ -69,8 +69,24 @@
 	\end{center}	
 \end{figure}
 
-\section*{练习}
+\section{快速排序的随机化版本}
+在讨论快速排序的平均情况性能的时候，我们的前提假设是：输入数据的所有排列都是等概率的。但是在实际工程中，这个假设并不会总是成立。有时，我们可以通过在算法中引入随机性，从而使得算法对于所有的输入都能获得较好的期望性能。很多人都选择随机化版本的快速排序作为大数据输入情况下的排序算法。
 
-7.2-1 利用代入法证明:正如7.2节开头提到的那样，递归式$ T(n) = T(n-1) + \Theta(n) $的解为$ T(n)=\Theta(n^2) $。
+在5.3节中，我们通过显式地对输入进行重新排列，使得算法实现随机化。当然，对于快速排序我们也可以这么做。但如果采用一种称为\textbf{随机抽样}(random sampling)的随机化技术，那么可以使得分析变得更加简单。与始终采用$ A[r] $作为主元的方法不同，随机抽样是从子数组$ A[p..r] $中随机选择一个元素作为主元。为达到这一目的，首先将$ A[r] $与从$ A[p..r] $中随机选出的一个元素交换。通过对序列$ p,\cdots,r $的随机抽样，可以保证主元元素$ x=A[r] $是等概率地从子数组的$ r-p+1 $个元素中选取的。因为主元是随机选取的，我们期望在平均情况下，对输入数组的划分是比较均衡的。
+\begin{codebox}
+	\Procname{$ \proc{RANDOMIZED-PARTITION}(A,p,r)$}
+	\li $ \id{i} \gets \proc{RANDOM}(p,r)$
+	\li exchange $ A[r] $ with $ A[i] $
+	\li \Return $ \proc{PARTITION}(A,p,r) $
+\end{codebox}
+\begin{codebox}
+	\Procname{$ \proc{RANDOMIZED-QUICKSORT}(A,p,r)$}
+	\li \If $ p<r $
+	\li \Then
+		 $q\gets \proc{RANDOMIZED-PARTITION}(A,p,r) $
+	\li	 $\proc{RANDOMIZED-QUICKSORT(A,p,q-1)} $
+	\li  $\proc{RANDOMIZED-QUICKSORT(A,q+1,r)} $	
+		\End 
+\end{codebox}
 
 \end{document}
